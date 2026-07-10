@@ -1,0 +1,21 @@
+{
+  "name": "gravity-manuals-api",
+  "version": "1.0.0",
+  "description": "Azure Function backend for the learner manuals portal. Holds the Dataverse client-credentials secret and exposes a narrow trainings-lookup endpoint.",
+  "main": "dist/src/functions/*.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/functions": "^4.0.0",
+    "@azure/msal-node": "^5.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,70 +1,48 @@
-# Getting Started with Create React App
+# Gravity Learner Manuals Portal
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Web portal where a learner types their ID number and sees the manuals for the
+trainings they attended. Looks and works like the learner sign-in kiosk tablet
+app, and reuses its Dataverse connection.
 
-## Available Scripts
+## How it works
 
-In the project directory, you can run:
+- **Front-end** (this folder): Create React App. Search screen → course cards →
+  "View manual" opens the PDF. Styling mirrors `learner-signin-kiosk/app`
+  (white background, red `#d32027` accent).
+- **API** ([api/](api/)): Azure Functions (Node/TypeScript), same pattern as the
+  kiosk's API. Holds the Dataverse client-credentials secret and exposes one
+  endpoint: `GET /api/trainings?idNumber=...` — returns every enrollment in
+  `tct_enrolls` for that learner ID whose booking has already started, newest
+  first.
+- **Manuals**: PDFs live in [public/manuals/](public/manuals/) and are mapped to
+  course names in [src/manuals.js](src/manuals.js). Courses without a mapped
+  PDF show "Manual not available yet".
 
-### `npm start`
+## Run locally
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+# Terminal 1 — API (needs Azure Functions Core Tools)
+cd api
+npm install
+npm start          # serves http://localhost:7071/api/trainings
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Terminal 2 — front-end
+npm install
+npm start
+```
 
-### `npm test`
+`api/local.settings.json` (gitignored) needs the same values as the kiosk API:
+`TENANT_ID`, `CLIENT_ID`, `CLIENT_SECRET`, `DATAVERSE_URL`.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Deploy
 
-### `npm run build`
+- Deploy `api/` as an Azure Function App with those four settings, plus CORS
+  for the portal's origin.
+- Build the front-end with `REACT_APP_API_BASE_URL` and
+  `REACT_APP_API_FUNCTION_KEY` set (see [.env](.env)), then host the `build/`
+  folder anywhere static (GitHub Pages, Azure Static Web Apps, ...).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Adding a manual
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Drop the PDF into `public/manuals/`.
+2. Add a line to `src/manuals.js`: `'Course Name As In Dataverse': 'file.pdf'`.
