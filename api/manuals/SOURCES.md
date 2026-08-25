@@ -7,9 +7,14 @@ someone repeats the steps below.
 
 Source library (all paths below are relative to it):
 
+**[Open the source library in SharePoint](https://gravitygh.sharepoint.com/sites/GravityGH/Gravity%20GH/Forms/AllItems.aspx?id=%2Fsites%2FGravityGH%2FGravity%20GH%2FGravity%20Data%2FGravity%20Training%2FB%20Training%2FDesign%20and%20Development%2FGravity%20Internal%20Training%20Course%20Material)**
+
 > `gravitygh.sharepoint.com/sites/GravityGH` → Gravity GH → Gravity Data →
 > Gravity Training → B Training → Design and Development →
 > **Gravity Internal Training Course Material**
+
+Each course has its own folder there, with the manual under a `Manual/`
+subfolder (older ones sit in `Manual/Previous Revision/` or `Archive/`).
 
 Selection rule used: newest English revision per course, excluding anything under
 `Archive/` or `Previous Revision/`, and excluding facilitator guides, assessments,
