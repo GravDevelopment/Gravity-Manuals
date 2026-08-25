@@ -8,9 +8,9 @@
 // This lives on the API rather than the front-end because it is now part of the
 // access check — the browser never learns a filename it isn't entitled to.
 //
-// Sourced July 2026 from SharePoint: Gravity GH / Gravity Data / Gravity
-// Training / B Training / Design and Development / Gravity Internal Training
-// Course Material — newest English revision per course at the time.
+// The PDFs are a snapshot pulled from SharePoint on 2026-07-10, not a live feed.
+// api/manuals/SOURCES.md records exactly which SharePoint file each one came
+// from, its revision code and its hash — check there before trusting one.
 const MANUALS: Record<string, string> = {
   // Advanced Fall Arrest Rescue — 99 Learner Manual_Rev1.1
   "Advanced Fall Arrest Rescue (Int.)": "afr.pdf",
