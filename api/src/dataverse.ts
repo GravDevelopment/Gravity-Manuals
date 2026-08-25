@@ -60,7 +60,19 @@ export interface Training {
   designation: string | null;
   startDate: string | null;
   endDate: string | null;
+  status: string | null;
+  competent: boolean;
 }
+
+// tct_assessmentstatus option set. tct_passfail looks like the field for this
+// but is null on every row — don't use it.
+const ASSESSMENT_STATUS: Record<number, string> = {
+  0: "In Training",
+  1: "Competent",
+  2: "Not Yet Competent",
+  3: "Did not Finish",
+};
+const COMPETENT = 1;
 
 interface CourseRow {
   grav_coursename?: string | null;
@@ -73,8 +85,11 @@ interface BookingRow {
 }
 
 function mapRow(row: any, course: CourseRow, booking: BookingRow): Training {
+  const status: number | null = row.tct_assessmentstatus ?? null;
   return {
     enrollId: row.tct_enrollid,
+    status: status === null ? null : ASSESSMENT_STATUS[status] ?? null,
+    competent: status === COMPETENT,
     firstName: row.grav_learnerfirstname ?? "",
     lastName: row.grav_learnerlastname ?? "",
     courseName: course.grav_coursename ?? null,

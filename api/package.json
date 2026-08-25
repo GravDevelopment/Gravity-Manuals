@@ -5,6 +5,7 @@
   "main": "dist/src/functions/*.js",
   "scripts": {
     "build": "tsc",
+    "check": "tsc && node dist/src/token.check.js",
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
