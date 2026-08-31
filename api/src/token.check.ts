@@ -24,4 +24,16 @@ const other = mintManualToken("bfa.pdf", now);
 process.env.MANUAL_TOKEN_SECRET = "different-secret";
 assert.equal(readManualToken(other, now), null, "token from another secret is rejected");
 
-console.log("token checks passed");
+// --- certificate identity check ---
+const { certificateMatches } = require("./dataverse") as typeof import("./dataverse");
+
+assert.equal(certificateMatches("GT2024123", ["GT2024123"]), true, "exact match");
+assert.equal(certificateMatches(" gt2024123 ", ["GT2024123"]), true, "case and spacing ignored");
+assert.equal(certificateMatches("GT2024123", ["OTHER0001", "GT2024123"]), true, "any of the learner's certificates");
+assert.equal(certificateMatches("GT9999999", ["GT2024123"]), false, "wrong number rejected");
+assert.equal(certificateMatches("", ["GT2024123"]), false, "blank input rejected");
+assert.equal(certificateMatches("GT2024123", []), false, "learner with no certificate cannot be matched");
+assert.equal(certificateMatches("", [null, "", undefined]), false, "blank must not match blank records");
+assert.equal(certificateMatches("GT2024123", [null, undefined]), false, "null records rejected");
+
+console.log("token + certificate checks passed");

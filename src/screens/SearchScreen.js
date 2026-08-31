@@ -1,28 +1,35 @@
 import { useState } from 'react';
-import { searchTrainings } from '../api/client';
+import { NoMatchError, searchTrainings } from '../api/client';
 import Logo from '../components/Logo';
 
 export default function SearchScreen({ onResults }) {
   const [idNumber, setIdNumber] = useState('');
+  const [certificateNumber, setCertificateNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   async function runSearch(event) {
     event.preventDefault();
-    const value = idNumber.trim();
-    if (!value || loading) return;
+    const id = idNumber.trim();
+    const cert = certificateNumber.trim();
+    if (!id || !cert || loading) return;
     setLoading(true);
     setError(null);
     try {
-      const trainings = await searchTrainings(value);
+      const trainings = await searchTrainings(id, cert);
       if (trainings.length === 0) {
-        setError("We couldn't find any trainings for that ID number. Please check and try again — or contact Gravity for help.");
-        setIdNumber('');
+        setError("We couldn't find any completed trainings for you yet. If that seems wrong, please contact Gravity.");
       } else {
         onResults(trainings);
       }
     } catch (e) {
-      setError('Something went wrong. Please try again — or contact Gravity for help.');
+      // The API deliberately can't tell us which detail was wrong, so the message
+      // covers every case — including learners with no certificate on record.
+      setError(
+        e instanceof NoMatchError
+          ? "Those details don't match. Please check your ID number and certificate number — if you don't have a certificate number, contact Gravity for help."
+          : 'Something went wrong. Please try again — or contact Gravity for help.'
+      );
     } finally {
       setLoading(false);
     }
@@ -36,24 +43,46 @@ export default function SearchScreen({ onResults }) {
         <div className="step-label">Learner manuals</div>
         <h1 className="title">Welcome</h1>
         <p className="subtitle">
-          Type your ID number to see the manuals
+          Enter your ID number and a certificate
           <br />
-          for the trainings you attended
+          number to see your manuals
         </p>
       </div>
 
       <form className="search-column" onSubmit={runSearch}>
+        <label className="field-label" htmlFor="idNumber">
+          ID number
+        </label>
+        {/* Not numeric-only: real learner IDs include passport-style values like
+            "T-1304-4144-994-1", "20010519-53220-00001-29" and "GHA7178513565",
+            so letters and hyphens must survive, and 20 chars is too short. */}
         <input
+          id="idNumber"
           className="id-input"
           type="text"
-          inputMode="numeric"
           autoComplete="off"
-          maxLength={20}
+          maxLength={40}
           placeholder="ID number"
           value={idNumber}
-          onChange={(e) => setIdNumber(e.target.value.replace(/[^0-9]/g, ''))}
+          onChange={(e) => setIdNumber(e.target.value.replace(/[^A-Za-z0-9/-]/g, '').toUpperCase())}
           autoFocus
         />
+
+        <label className="field-label" htmlFor="certificateNumber">
+          Certificate number
+        </label>
+        {/* Certificate numbers look like "287958/26" — keep the slash. */}
+        <input
+          id="certificateNumber"
+          className="id-input cert-input"
+          type="text"
+          autoComplete="off"
+          maxLength={24}
+          placeholder="e.g. 287958/26"
+          value={certificateNumber}
+          onChange={(e) => setCertificateNumber(e.target.value.replace(/[^A-Za-z0-9/-]/g, '').toUpperCase())}
+        />
+        <p className="field-hint">From any Gravity certificate you have received</p>
 
         {error && <p className="error-text">{error}</p>}
 

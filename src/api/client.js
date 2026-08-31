@@ -7,14 +7,23 @@ export function manualUrl(manualToken) {
   return `${API_BASE_URL.replace(/\/+$/, '')}/api/manual?t=${encodeURIComponent(manualToken)}`;
 }
 
-export async function searchTrainings(idNumber) {
-  const url = `${API_BASE_URL.replace(/\/+$/, '')}/api/trainings?idNumber=${encodeURIComponent(idNumber)}`;
+/** Thrown when the ID number and certificate number don't match a learner. */
+export class NoMatchError extends Error {}
+
+export async function searchTrainings(idNumber, certificateNumber) {
+  const url =
+    `${API_BASE_URL.replace(/\/+$/, '')}/api/trainings` +
+    `?idNumber=${encodeURIComponent(idNumber)}` +
+    `&cert=${encodeURIComponent(certificateNumber)}`;
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
       ...(API_FUNCTION_KEY ? { 'x-functions-key': API_FUNCTION_KEY } : {}),
     },
   });
+  if (response.status === 404) {
+    throw new NoMatchError('no match');
+  }
   if (!response.ok) {
     throw new Error(`Search failed (${response.status})`);
   }

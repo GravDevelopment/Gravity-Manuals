@@ -135,6 +135,29 @@
   border-color: var(--accent);
 }
 
+.field-label {
+  align-self: flex-start;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.id-input.cert-input {
+  font-size: 26px;
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+}
+
+.field-hint {
+  align-self: flex-start;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 0 0 18px;
+}
+
 /* Results screen */
 
 .results-screen {
