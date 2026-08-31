@@ -1,0 +1,15 @@
+{
+  "short_name": "Gravity Manuals",
+  "name": "Gravity Learner Manuals",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#d32027",
+  "background_color": "#ffffff"
+}

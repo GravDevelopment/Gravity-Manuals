@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Gravity-Manuals/static/css/main.0bbb36cd.css",
+    "main.js": "/Gravity-Manuals/static/js/main.5aa7dbfb.js",
+    "static/js/453.d992dd09.chunk.js": "/Gravity-Manuals/static/js/453.d992dd09.chunk.js",
+    "index.html": "/Gravity-Manuals/index.html",
+    "main.0bbb36cd.css.map": "/Gravity-Manuals/static/css/main.0bbb36cd.css.map",
+    "main.5aa7dbfb.js.map": "/Gravity-Manuals/static/js/main.5aa7dbfb.js.map",
+    "453.d992dd09.chunk.js.map": "/Gravity-Manuals/static/js/453.d992dd09.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0bbb36cd.css",
+    "static/js/main.5aa7dbfb.js"
+  ]
+}
