@@ -297,6 +297,21 @@
   background-color: var(--accent-dark);
 }
 
+.manual-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.manual-links-label {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
 .manual-missing {
   background-color: var(--surface-alt);
   color: var(--text-muted);

@@ -6,7 +6,7 @@ function formatRange(training) {
   return `${training.startDate ?? '?'} — ${training.endDate ?? '?'}`;
 }
 
-// Why there's no manual to open. The API only issues a link for a course the
+// Why there's no manual to open. The API only issues links for a course the
 // learner is marked Competent on, so say which of those two it is.
 function manualNotice(training) {
   if (training.competent) return 'Manual not available yet';
@@ -31,7 +31,7 @@ export default function ResultsScreen({ trainings, onBack }) {
 
       <ul className="course-list">
         {trainings.map((training) => {
-          const href = training.manualToken ? manualUrl(training.manualToken) : null;
+          const manuals = training.manuals ?? [];
           return (
             <li key={training.enrollId} className="course-card">
               <div className="card-accent" />
@@ -43,15 +43,25 @@ export default function ResultsScreen({ trainings, onBack }) {
                     {formatRange(training)}
                     {training.status && ` · ${training.status}`}
                   </span>
-                  {href ? (
-                    <a
-                      className="manual-button"
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View manual
-                    </a>
+                  {manuals.length > 0 ? (
+                    <span className="manual-links">
+                      {/* Every language listed and named, so nobody has to guess
+                          which button is which. */}
+                      <span className="manual-links-label">Manual:</span>
+                      {manuals.map((m) => (
+                        <a
+                          key={m.lang}
+                          className="manual-button"
+                          href={manualUrl(m.token)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          lang={m.lang}
+                          title={`Open the ${m.label} manual`}
+                        >
+                          {m.label}
+                        </a>
+                      ))}
+                    </span>
                   ) : (
                     <span className="manual-missing">{manualNotice(training)}</span>
                   )}
@@ -66,7 +76,7 @@ export default function ResultsScreen({ trainings, onBack }) {
           find what they came for shouldn't have to work out who to ask. */}
       <div className="notice notice-standing" role="status">
         <p className="notice-help">
-          Can't see a manual you're expecting? Email{' '}
+          Can't see a manual you're expecting, or need it in another language? Email{' '}
           <a href={supportMailto('Learner manuals — manual not available')}>{SUPPORT_EMAIL}</a>{' '}
           with your ID number and the course name, and we'll send it to you.
         </p>

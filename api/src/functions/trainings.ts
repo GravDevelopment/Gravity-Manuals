@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { searchTrainingsByLearnerId } from "../dataverse";
-import { manualFileFor } from "../manuals";
+import { manualsFor } from "../manuals";
 import { mintManualToken } from "../token";
 
 export async function trainings(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
@@ -18,12 +18,18 @@ export async function trainings(request: HttpRequest, context: InvocationContext
       // into a way of confirming which ID numbers exist.
       return { status: 404, jsonBody: { error: "No match for those details" } };
     }
-    // Only a Competent enrolment gets a manual link, and the filename never
-    // leaves the API — the browser only ever sees an opaque signed token.
-    const trainings = found.map((training) => {
-      const file = training.competent ? manualFileFor(training.courseName) : null;
-      return { ...training, manualToken: file ? mintManualToken(file) : null };
-    });
+    // Only a Competent enrolment gets manual links, one per available language.
+    // Filenames never leave the API — the browser only sees opaque signed tokens.
+    const trainings = found.map((training) => ({
+      ...training,
+      manuals: training.competent
+        ? manualsFor(training.courseName).map(({ lang, label, file }) => ({
+            lang,
+            label,
+            token: mintManualToken(file),
+          }))
+        : [],
+    }));
     return { status: 200, jsonBody: { trainings } };
   } catch (err) {
     context.error("trainings lookup failed", err);

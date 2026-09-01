@@ -1,93 +1,164 @@
-// Maps a course name (grav_coursename in Dataverse, exactly as it appears on
-// the course record) to its manual PDF inside api/manuals/.
+// Which manual PDF belongs to which Dataverse course, and in which languages.
 //
-// To add a manual:
-//   1. Drop the PDF into api/manuals/
-//   2. Add a line here:  'Course Name As In Dataverse': 'the-file.pdf',
+// Two maps rather than one, so the many course-name aliases (Int./Mines/Staff/
+// Refresher/Bridging variants) don't each have to repeat their translations:
 //
-// This lives on the API rather than the front-end because it is now part of the
-// access check — the browser never learns a filename it isn't entitled to.
+//   MANUALS       — manual key -> { language code: filename in api/manuals/ }
+//   COURSE_MANUAL — grav_coursename (exact) -> manual key
 //
-// The PDFs are a snapshot pulled from SharePoint on 2026-07-10, not a live feed.
-// api/manuals/SOURCES.md records exactly which SharePoint file each one came
-// from, its revision code and its hash — check there before trusting one.
-const MANUALS: Record<string, string> = {
-  // Advanced Fall Arrest Rescue — 99 Learner Manual_Rev1.1
-  "Advanced Fall Arrest Rescue (Int.)": "afr.pdf",
-  "Advanced Fall Arrest Rescue Specialist": "afr.pdf",
-  // VERIFY: Fall Arrest Rescue courses assumed to share the AFR / US 229999 manual
-  "Fall Arrest Rescue": "afr.pdf",
-  "Fall Arrest Rescue (Int.)": "afr.pdf",
+// This lives on the API rather than the front-end because it is part of the
+// access check: the browser never learns a filename it isn't entitled to.
+//
+// Primary source (imported 2026-09-01): the curated SharePoint folder
+// "Design and Development / Manuals". Translations come from the older
+// "Gravity Internal Training Course Material" library, which is the only place
+// they exist. api/manuals/SOURCES.md records every file's origin and revision.
 
-  // Basic Fall Arrest — GLC98LMT Learner Manual_Rev 3
-  "Basic Fall Arrest": "bfa.pdf",
-  "Basic Fall Arrest (Int.)": "bfa.pdf",
-  "Basic Fall Arrest (Mines)": "bfa.pdf",
-
-  // Climbing Equipment Inspection and Management — CEIMLM_MANUAL_Rev4
-  "Climbing Equipment Inspection and Management": "ceim.pdf",
-
-  // Fall Arrest and Basic Rescue — GLC9895LM_LEARNER MANUAL_Rev5
-  "Fall Arrest and Basic Rescue": "fabr.pdf",
-  "Fall Arrest & Basic Rescue Technician (Int.)": "fabr.pdf",
-  "Fall Arrest & Basic Rescue Technician (Int.) - Staff": "fabr.pdf",
-  "FABR Bridging Course": "fabr.pdf",
-  "Fall Arrest Bridging Course": "fabr.pdf",
-
-  // Fall Protection Plan Developer — 94 Manual Rev 3 A4
-  "Fall Protection Plan Developer": "fpp.pdf",
-  "Fall Protection Plan Development (Int.)": "fpp.pdf",
-  "E-Learning Fall Protection Plan Developer": "fpp.pdf",
-
-  // Gravity Horizontal / Vertical System — GLCGLSLM_Rev2.3 GHS & GVS MANUAL
-  "Gravity Horizontal System": "gls.pdf",
-  "Gravity Vertical System": "gls.pdf",
-
-  // Implement a Fall Protection Plan — GLCIFPPLM_Rev 3
-  "Implement a Fall Protection Plan": "ifpp.pdf",
-
-  // Mechanical Lifting — ML_MANUAL_Rev3
-  "Mechanical Lifting": "mechanical-lifting.pdf",
-  "Mechanical Lifting (Int.)": "mechanical-lifting.pdf",
-
-  // Portable Ladder / Pole Climbing — GLCPLPC_MANUAL_Rev4
-  "Portable Ladder User": "plu-plpc.pdf",
-  "Portable Ladder User - Solar Structure": "plu-plpc.pdf",
-  "Portable Ladder and Pole Climbing": "plu-plpc.pdf",
-
-  // Rope Access Level 1 — GLC98&00LM Learner Manual_Rev 3
-  "Rope Access Level 1": "ra-l1.pdf",
-  "Rope Access L1 - Recap/Assessment only": "ra-l1.pdf",
-
-  // Rope Access Levels 2 & 3 — GLC96,97&LM Level 2 & 3 Manual_Rev 2
-  "Rope Access Level 2": "ra-l2-l3.pdf",
-  "Rope Access Level 2 Theory": "ra-l2-l3.pdf",
-  "Rope Access Level 2 Test": "ra-l2-l3.pdf",
-  "Rope Access L2 - Recap/Assessment only": "ra-l2-l3.pdf",
-  "Rope Access Level 3": "ra-l2-l3.pdf",
-  "Rope Access Level 3 Theory": "ra-l2-l3.pdf",
-  "Rope Access Level 3 Test": "ra-l2-l3.pdf",
-  "Rope Access L3 - Recap/Assessment only": "ra-l2-l3.pdf",
-
-  // Radio Frequency Awareness — GLCRFALM02_Rev 2
-  "Radio Frequency Awareness": "rfa.pdf",
-  "E-Learning Radio Frequency Awareness": "rfa.pdf",
-
-  // Rope Rigging — GLC06LM_RR MANUAL_Rev4
-  "Rope Rigging": "rope-rigging.pdf",
-  "Rope Rigging (Int.)": "rope-rigging.pdf",
-  "Rope Rigging (Int.) - Staff": "rope-rigging.pdf",
-  "Rope Rigging Bridging Course": "rope-rigging.pdf",
-
-  // Telecommunication Abseiling — GLCTALM01_Rev3
-  "Telecommunication Abseiling": "telecommunication-abseiling.pdf",
-
-  // Tower Erector — GLCTELM_Rev 3
-  "Tower Erector": "tower-erector.pdf",
-  "Assistant Tower Erector": "tower-erector.pdf",
+export const LANGUAGES: Record<string, string> = {
+  en: "English",
+  fr: "Français",
+  pt: "Português",
+  ur: "اردو",
 };
 
-export function manualFileFor(courseName: string | null): string | null {
-  if (!courseName) return null;
-  return MANUALS[courseName] ?? null;
+type LangFiles = Record<string, string>;
+
+const MANUALS: Record<string, LangFiles> = {
+  afr: { en: "afr.pdf" },                                    // GLC99LM Rev_3
+  bfa: { en: "bfa.pdf" },                                    // GT98_LM_Rev 5.1
+  ceim: { en: "ceim.pdf" },                                  // GLCCEIMLM_Rev 4
+  fabr: {                                                    // GT9895_LM_Rev 6.1
+    en: "fabr.pdf",
+    fr: "fabr-fr.pdf",                                       // GLCFABRLM02_Rev 5.2
+    pt: "fabr-pt.pdf",                                       // GT9895PORLM02_Rev 3.3
+    ur: "fabr-ur.pdf",                                       // VERIFY: no Urdu text layer found
+  },
+  fplu: { en: "fplu.pdf" },                                  // GTFPULM02_Rev 1
+  fpp: { en: "fpp.pdf" },                                    // GT94_LM_Rev_5
+  gls: { en: "gls.pdf", fr: "gls-fr.pdf" },                  // GTGLS_LM_Rev 3 / GLCGLSLM02_Rev 2.2
+  gvs: { en: "gvs.pdf" },                                    // VERIFY: product spec, no course-overview page
+  ifpp: { en: "ifpp.pdf", fr: "ifpp-fr.pdf" },               // GLCIFPPLM_Rev 3
+  lineOfFire: { en: "line-of-fire.pdf" },                    // GTLOF_LM_Rev 1 — no course uses it yet
+  mechanicalLifting: {                                       // ML_M_Rev 2.1
+    en: "mechanical-lifting.pdf",
+    fr: "mechanical-lifting-fr.pdf",                         // GLCMLLM_Rev 2.1
+  },
+  plpc: { en: "plpc.pdf" },                                  // GLCPLPC_Rev 4
+  plu: { en: "plu.pdf" },                                    // PLU_M_Rev3
+  raL1: { en: "ra-l1.pdf" },                                 // GLC98&00LM_Rev 3
+  raL2L3: { en: "ra-l2-l3.pdf" },                            // GLC96,97&LM_Rev 2
+  rfa: {                                                     // GTRFA_LM_Rev 4
+    en: "rfa.pdf",
+    fr: "rfa-fr.pdf",                                        // GLCRFALM02_Rev 1.4 (DRC)
+    pt: "rfa-pt.pdf",                                        // GTPORRFALM02_Rev 1
+    ur: "rfa-ur.pdf",                                        // GLCRFALM02_Rev2.0
+  },
+  ropeRigging: {                                             // GLC06M_Rev 3.3
+    en: "rope-rigging.pdf",
+    fr: "rope-rigging-fr.pdf",                               // GTRRLM02_Rev 3.2
+  },
+  telecomAbseiling: { en: "telecommunication-abseiling.pdf" }, // GLCTALM01_Rev 3
+  towerErector: {                                            // GLCTELM_Rev 3
+    en: "tower-erector.pdf",
+    fr: "tower-erector-fr.pdf",                              // GLCTELM_Rev 2.1
+  },
+  towerVerticality: { en: "tower-verticality.pdf" },         // GTTVT_LM_Rev 1
+};
+
+const COURSE_MANUAL: Record<string, keyof typeof MANUALS> = {
+  // Advanced Fall Arrest Rescue
+  "Advanced Fall Arrest Rescue (Int.)": "afr",
+  "Advanced Fall Arrest Rescue Specialist": "afr",
+  // VERIFY: the plain Fall Arrest Rescue courses are pointed at the *Advanced*
+  // manual because no separate FAR manual exists in either SharePoint folder.
+  "Fall Arrest Rescue": "afr",
+  "Fall Arrest Rescue (Int.)": "afr",
+
+  // Basic Fall Arrest
+  "Basic Fall Arrest": "bfa",
+  "Basic Fall Arrest (Int.)": "bfa",
+  "Basic Fall Arrest (Mines)": "bfa",
+
+  "Climbing Equipment Inspection and Management": "ceim",
+
+  // Fall Arrest & Basic Rescue
+  "Fall Arrest and Basic Rescue": "fabr",
+  "Fall Arrest & Basic Rescue Technician (Int.)": "fabr",
+  "Fall Arrest & Basic Rescue Technician (Int.) - Staff": "fabr",
+  "Fall Arrest & Basic Rescue Refresher (Int.)": "fabr",
+  "FABR Bridging Course": "fabr",
+  "Fall Arrest Bridging Course": "fabr",
+
+  // Fall Protection Plan
+  "Fall Protection Plan Developer": "fpp",
+  "Fall Protection Plan Development (Int.)": "fpp",
+  "E-Learning Fall Protection Plan Developer": "fpp",
+  "Implement a Fall Protection Plan": "ifpp",
+
+  // Gravity lifeline systems
+  "Gravity Horizontal System": "gls",
+  "Gravity Vertical System": "gls",
+  "Gravity Vertical System Installer": "gvs",
+  "GVS Installer Refresher": "gvs",
+
+  // Lifting
+  "Mechanical Lifting": "mechanicalLifting",
+  "Mechanical Lifting (Int.)": "mechanicalLifting",
+
+  // Ladders
+  "Portable Ladder and Pole Climbing": "plpc",
+  "Portable Ladder User": "plu",
+  "Portable Ladder User - Solar Structure": "plu",
+
+  // Rope access
+  "Rope Access Level 1": "raL1",
+  "Rope Access L1 - Recap/Assessment only": "raL1",
+  "Rope Access Level 2": "raL2L3",
+  "Rope Access Level 2 Theory": "raL2L3",
+  "Rope Access Level 2 Test": "raL2L3",
+  "Rope Access L2 - Recap/Assessment only": "raL2L3",
+  "Rope Access Level 3": "raL2L3",
+  "Rope Access Level 3 Theory": "raL2L3",
+  "Rope Access Level 3 Test": "raL2L3",
+  "Rope Access L3 - Recap/Assessment only": "raL2L3",
+
+  "Radio Frequency Awareness": "rfa",
+  "E-Learning Radio Frequency Awareness": "rfa",
+
+  // Rope rigging
+  "Rope Rigging": "ropeRigging",
+  "Rope Rigging (Int.)": "ropeRigging",
+  "Rope Rigging (Int.) - Staff": "ropeRigging",
+  "Rope Rigging Refresher (Int.)": "ropeRigging",
+  "Rope Rigging Bridging Course": "ropeRigging",
+
+  "Telecommunication Abseiling": "telecomAbseiling",
+  "Tower Erector": "towerErector",
+  "Assistant Tower Erector": "towerErector",
+  "Tower Verticality Testing": "towerVerticality",
+
+  // No course currently maps to fplu (Fallprotec Securail) or lineOfFire —
+  // the PDFs are here ready for when those courses exist in Dataverse.
+  //
+  // Deliberately unmapped: the four "Manual and Mechanical Lifting" courses.
+  // The only MML file in SharePoint ("GTMML Manual.pdf") is a 4-page assessor
+  // marking sheet (GTMML_POE_Rev 1.1), not a learner manual.
+};
+
+export interface ManualVariant {
+  lang: string;
+  label: string;
+  file: string;
+}
+
+/** Every language a course's manual is available in; English first, or [] if none. */
+export function manualsFor(courseName: string | null): ManualVariant[] {
+  if (!courseName) return [];
+  const key = COURSE_MANUAL[courseName];
+  if (!key) return [];
+  const files = MANUALS[key];
+  if (!files) return [];
+  return Object.keys(files)
+    .sort((a, b) => (a === "en" ? -1 : b === "en" ? 1 : a.localeCompare(b)))
+    .map((lang) => ({ lang, label: LANGUAGES[lang] ?? lang, file: files[lang] }));
 }

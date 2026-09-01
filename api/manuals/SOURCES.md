@@ -1,63 +1,113 @@
 # Where these manuals came from
 
-**These files are a snapshot, not a live feed.** They were pulled from SharePoint
-on **2026-07-10** and committed to this repo. Nothing re-fetches them, so if a
-course manual is revised in SharePoint the portal keeps serving the old one until
-someone repeats the steps below.
+**Single source of truth: the SharePoint `Manuals` folder.**
 
-Source library (all paths below are relative to it):
-
-**[Open the source library in SharePoint](https://gravitygh.sharepoint.com/sites/GravityGH/Gravity%20GH/Forms/AllItems.aspx?id=%2Fsites%2FGravityGH%2FGravity%20GH%2FGravity%20Data%2FGravity%20Training%2FB%20Training%2FDesign%20and%20Development%2FGravity%20Internal%20Training%20Course%20Material)**
-
+> [Open it in SharePoint](https://gravitygh.sharepoint.com/sites/GravityGH/Gravity%20GH/Forms/AllItems.aspx?id=%2Fsites%2FGravityGH%2FGravity%20GH%2FGravity%20Data%2FGravity%20Training%2FB%20Training%2FDesign%20and%20Development%2FManuals)
+>
 > `gravitygh.sharepoint.com/sites/GravityGH` → Gravity GH → Gravity Data →
-> Gravity Training → B Training → Design and Development →
-> **Gravity Internal Training Course Material**
+> Gravity Training → B Training → Design and Development → **Manuals**
 
-Each course has its own folder there, with the manual under a `Manual/`
-subfolder (older ones sit in `Manual/Previous Revision/` or `Archive/`).
+Imported 2026-09-01. Every file the portal serves is in that folder, and every
+file in that folder except one is served (see *Not served* below). The older
+`Gravity Internal Training Course Material` library is no longer used as a
+source — the translations that only existed there were copied across.
 
-Selection rule used: newest English revision per course, excluding anything under
-`Archive/` or `Previous Revision/`, and excluding facilitator guides, assessments,
-memos and translations. "Doc code" is the revision string printed inside the PDF
-itself — the reliable way to tell which revision a file really is, since filenames
-drift.
+**These files are still a snapshot, not a live feed.** Replacing a PDF in
+SharePoint does not change the portal until someone repeats the refresh below.
 
-| Served as | Source folder | Source file | Doc code | Bytes | sha256 (first 16) |
+"Doc code" is the revision string printed inside the PDF itself — the reliable
+way to tell which revision a file really is, since filenames drift.
+
+| Served as | SharePoint file | Doc code | Language | Bytes | sha256 (first 16) |
 |---|---|---|---|---|---|
-| afr.pdf | AFR & US 229999 | 99 Learner Manual_Rev1.1.pdf | GT9800LM01 Rev_1.1 | 24601143 | f7a7c1c2dd9bfee8 |
-| bfa.pdf | BFA & US 229998 | GLC98LMT - Learner Manual_Rev 3.pdf | GLC98LM_Rev 3 | 6166177 | a916d515c5598703 |
-| ceim.pdf | CEIM | CEIMLM_MANUAL_Rev4.pdf | GLCCEIMLM_Rev 4 | 1196645 | eaa3f006e5bda7f1 |
-| fabr.pdf | FABR & US 229998 & 229995 | GLC9895LM_LEARNER MANUAL_Rev5.pdf | GLC9895LM_Rev 5.0 | 8496835 | 4a4f0d2ecd2d93dd |
-| fpp.pdf | FPP & US 229994 | 94 Manual Rev 3 A4.pdf | GT94LM01 Rev_3.0 | 5232363 | 61dae22d59a804a9 |
-| gls.pdf | GLS (Gravity Lifeline Systems) | GLCGLSLM_Rev2.3 - GHS & GVS MANUAL.pdf | GLCGLSLM_Rev 2.3 | 3820437 | fb3174c531bbb3d2 |
-| ifpp.pdf | IFPP | GLCIFPPLM_Rev 3- IFPP Manual.pdf | GLCIFPPLM_Rev 3 | 1161781 | 96a7bfb29eb559ce |
-| mechanical-lifting.pdf | Mechanical Lifting & US 253582 | ML_MANUAL_Rev3.pdf | ML_M_Rev 3 | 2152133 | 1b378eb15f8aab4e |
-| plu-plpc.pdf | PLU & PLPC | GLCPLPC_MANUAL_Rev4.pdf | GLCPLPC_Rev 4 | 2565910 | 40279085d135091b |
-| ra-l1.pdf | RA L1 US 229998 & 230000 | GLC98&00LM - Learner Manual_Rev 3.pdf | GLC98&00LM_Rev 3 | 6056066 | 8742e4f4f31936cf |
-| ra-l2-l3.pdf | RA L2 US 229996 | GLC96,97&LM - Level 2 & 3 Manual_Rev 2.pdf | GLC96,97&LM_Rev 2 | 13201535 | 003f0760e46aedaa |
-| rfa.pdf | RFA | GLCRFALM02_RFA Learner Manual_Rev 2.pdf | GLCRFALM02_Rev 2.0 | 1042543 | 05343cba21855426 |
-| rope-rigging.pdf | RR & US 14706 | GLC06LM_RR MANUAL_Rev4.pdf | GLC06M_Rev 4 | 2015851 | f61a9f58c4c5e9d2 |
-| telecommunication-abseiling.pdf | Telecommunication Abseiling | GLCTALM01_Telecommmunication Abseiling Manual_Rev3.pdf | GLCTALM01_Rev 3 | 2159621 | 835a444a37bfbf13 |
-| tower-erector.pdf | Tower Erector | GLCTELM_TOWER ERECTOR MANUAL_Rev 3.pdf | GLCTELM_Rev 3 | 2264645 | 18af4b9e10d09c13 |
+| `afr.pdf` | AFR & US 229999 Manual.pdf | GLC99LM Rev_3 | English | 11599061 | 1e5fa3661c72af7d |
+| `bfa.pdf` | BFA & US 229998 Manual.pdf | GT98_LM_Rev 5.1 | English | 1119365 | a4a59350ed42f370 |
+| `ceim.pdf` | CEIM Manual.pdf | GLCCEIMLM_Rev 4 | English | 1196645 | eaa3f006e5bda7f1 |
+| `fabr-fr.pdf` | FABR & US 229998 & 229995 Manual (French).pdf | GLCFABRLM02_Rev 5.2 | Français | 6088329 | 4f90bbbf85a56b03 |
+| `fabr-pt.pdf` | FABR & US 229998 & 229995 Manual (Portuguese).pdf | GT9895PORLM02_Rev 3.3 | Português | 5360560 | 23eab6a85b0ffc94 |
+| `fabr-ur.pdf` | FABR & US 229998 & 229995 Manual (Urdu).pdf | GLCFABRLM_Rev1 2023 | اردو — VERIFY | 18409618 | 9fb4771286aad25a |
+| `fabr.pdf` | FABR & US 229998 & 229995 Manual.pdf | GT9895_LM_Rev 6.1 | English | 7842980 | d57f1c04ea406361 |
+| `fplu.pdf` | FPLU Manual.pdf | GTFPULM02_Rev 1 | English — unmapped | 2094570 | b9ac291a5fadbeca |
+| `fpp.pdf` | FPP & US 229994 Manual.pdf | GT94_LM_Rev_5 | English | 6567640 | 3b57aab9afc7933b |
+| `gls-fr.pdf` | GTGLS Manual (French).pdf | GLCGLSLM02_Rev 2.2 | Français | 3776638 | e86cb28f72e02149 |
+| `gls.pdf` | GTGLS manual.pdf | GTGLS_LM_Rev 3 | English | 4542184 | fe2b14815f991e2d |
+| `gvs.pdf` | GVS Manual.pdf | (none printed) — VERIFY | English | 1470233 | ea1dfb5c48f10684 |
+| `ifpp-fr.pdf` | GLCIFPP Manual (French).pdf | GLCMLLM02_Rev 2 — code mismatch | Français | 3226384 | d26739d5046011f1 |
+| `ifpp.pdf` | GLCIFPP Manual.pdf | GLCIFPPLM_Rev 3 | English | 1161781 | 96a7bfb29eb559ce |
+| `line-of-fire.pdf` | GTLOF Manual.pdf | GTLOF_LM_Rev 1 | English — unmapped | 23293663 | 5078663d9205a85f |
+| `mechanical-lifting-fr.pdf` | ML MANUAL (French).pdf | GLCMLLM_Rev 2.1 | Français | 7064520 | c222570f4ba6ed5d |
+| `mechanical-lifting.pdf` | ML MANUAL.pdf | ML_M_Rev 2.1 | English | 4238150 | d7bdc243df79fb94 |
+| `plpc.pdf` | GLCPLPC MANUAL.pdf | GLCPLPC_Rev 4 | English | 2565910 | 40279085d135091b |
+| `plu.pdf` | PLU MANUAL.pdf | PLU_M_Rev3 | English | 2185047 | 5590f1dc209ede23 |
+| `ra-l1.pdf` | GLC98&00LM - Learner Manual_Rev 3.pdf | GLC98&00LM_Rev 3 | English | 6056066 | 8742e4f4f31936cf |
+| `ra-l2-l3.pdf` | GLC96,97&LM - Level 2 & 3 Manual_Rev 2.pdf | GLC96,97&LM_Rev 2 | English | 13201535 | 003f0760e46aedaa |
+| `rfa-fr.pdf` | GTRFA Manual (French).pdf | GLCRFALM02_Rev 1.4 (DRC) | Français | 2438978 | 142ce03201178843 |
+| `rfa-pt.pdf` | GTRFA Manual (Portuguese).pdf | GTPORRFALM02_Rev 1 | Português | 758162 | 89b82b4ed58a888f |
+| `rfa-ur.pdf` | GTRFA Manual (Urdu).pdf | GLCRFALM02_Rev2.0 | اردو | 1477003 | e655eabf733cb79f |
+| `rfa.pdf` | GTRFA_LM_Rev 4.pdf | GTRFA_LM_Rev 4 | English | 883353 | 4b2a97cd880964ea |
+| `rope-rigging-fr.pdf` | GLC06LM_RR MANUAL (French).pdf | GTRRLM02_Rev 3.2 | Français | 4787019 | 370ee77eea8c3de5 |
+| `rope-rigging.pdf` | GLC06LM_RR MANUAL_Rev3.3 .pdf | GLC06M_Rev 3.3 | English | 5163143 | 1339a2bbd034eb86 |
+| `telecommunication-abseiling.pdf` | GLCTALM01_Telecommmunication Abseiling Manual_Rev3.pdf | GLCTALM01_Rev 3 | English | 2159621 | 835a444a37bfbf13 |
+| `tower-erector-fr.pdf` | GLCTELM_TOWER ERECTOR MANUAL (French).pdf | GLCTELM_Rev 2.1 | Français | 8319157 | 90a2f69b2b6fb3b4 |
+| `tower-erector.pdf` | GLCTELM_TOWER ERECTOR MANUAL_Rev 3.pdf | GLCTELM_Rev 3 | English | 2264645 | 18af4b9e10d09c13 |
+| `tower-verticality.pdf` | GTTVT_LM_Rev 1.pdf | GTTVT_LM_Rev 1 | English | 703669 | 0c19933e677d59c4 |
 
-## Known gaps
+## Not served
 
-- **ra-l1.pdf** opens with a "Fall Arrest & Basic Rescue" course-overview page.
-  The body is genuinely the Rope Access L1 manual (correct 98&00 doc code, RA
-  logbook at the back) — the stray page is in Gravity's source PDF, so it has to
-  be fixed there.
-- **Fall Arrest Rescue** (the non-Advanced course) is mapped to `afr.pdf`, the
-  US 229999 *Advanced* manual. Flagged `VERIFY` in `../src/manuals.ts` — a
-  training-department call, not a technical one.
-- Courses with no manual here at all: Rope Access L3 (covered by the combined
-  L2 & L3 manual), Scaffolding, Supervisor Course, GVS Installation / Gravity
-  Vertical System Installer, IRATA, Tower Verticality, Confined Space.
+- **`GTMML Manual.pdf`** (in the folder, deliberately not imported) — it is a
+  4-page assessor marking sheet (`GTMML_POE_Rev 1.1`, "Assessor to mark A for
+  achieved or NYA"), not a learner manual. Because of this the four
+  **Manual and Mechanical Lifting** courses (150kg/500kg, SA/Int) have no manual.
+  A real MML learner manual needs to be added to the folder.
+
+## Flagged for a human check
+
+- **`fabr-ur.pdf`** — filename says Urdu and the file is 17.6 MB for 71 pages,
+  but there is no Urdu text layer in the first 25 pages (only Latin characters),
+  so the Urdu is presumably page images. Nobody has confirmed the content is
+  actually Urdu.
+- **`gvs.pdf`** — the only file with no revision code and no course-overview
+  page. Reads as a product specification ("Scope and intent", "Design",
+  "Fall clearance") rather than a course manual. Mapped to the two GVS Installer
+  courses on the assumption that is intentional.
+- **`ifpp-fr.pdf`** — titled "MISE EN ŒUVRE D'UN PLAN DE PROTECTION" (Implement a
+  Fall Protection Plan, correct) but its footer reads `GLCMLLM02_Rev 2`, which is
+  a Mechanical Lifting code. Wrong footer in Gravity's source document.
+- **`tower-erector-fr.pdf`** — titled "MONTEUR DE PYLÔNES" (Tower Erector,
+  correct) but the opening line says "Le cours de Levage Mécanique"
+  (Mechanical Lifting). Wrong intro sentence in the source document.
+- **`afr.pdf`** is mapped to the plain **Fall Arrest Rescue** courses as well as
+  the Advanced ones, because no separate non-Advanced manual exists anywhere.
+- **`rope-rigging.pdf`** (`Rev 3.3`) and **`mechanical-lifting.pdf`** (`Rev 2.1`)
+  are *older* than the versions the old library held (`Rev 4` and `Rev 3`). The
+  new folder was taken as authoritative, but this may have been accidental.
+
+## Courses with no manual
+
+Basic Slinging · Commercial Banner Flighting · Confined Space Entry · Confined
+Space Rescue · First Aid Training · High Angle Level 1 · IRATA (all) · Legal
+Liability · Manual and Mechanical Lifting (all four) · Rooftop Worker ·
+Supervision Level 3 · Floorplan Inspection · Inspect Gear KITS
+
+Learners on these see "Manual not available yet" and are pointed at
+certification@gravitygh.co.za.
+
+`fplu.pdf` (Fallprotec Securail) and `line-of-fire.pdf` are in the folder and
+imported, but no Dataverse course name matches them yet, so nothing links to
+them.
 
 ## Refreshing a manual
 
-1. Find the course's folder in the source library above.
-2. Take the newest English revision outside `Archive/` and `Previous Revision/`.
-3. Open it and check the doc code on an inside page against the table — filenames
-   lie, doc codes don't.
-4. Replace the file here, keeping the served name, and update the row above
-   (bytes + `sha256sum`).
+1. Replace the PDF in the SharePoint `Manuals` folder above.
+2. Copy it into `api/manuals/` under the same served name from the table.
+3. Check the doc code on an inside page and update the table (bytes +
+   `sha256sum`).
+4. Deploy: `cd api && func azure functionapp publish gravity-manuals-api`
+
+No site rebuild is needed — the PDFs ship with the API, not the website.
+
+## Adding a language
+
+Name it `<served-name>-<iso639-1>.pdf` (e.g. `bfa-fr.pdf`) and add it to the
+matching entry in [`../src/manuals.ts`](../src/manuals.ts). Language names shown
+to learners come from `LANGUAGES` in that file.
