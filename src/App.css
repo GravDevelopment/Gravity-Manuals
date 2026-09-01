@@ -158,6 +158,43 @@
   margin: 0 0 18px;
 }
 
+.notice {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.notice .error-text {
+  margin: 0 0 6px;
+  text-align: left;
+  max-width: none;
+}
+
+.notice-help {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+}
+
+.notice-help a {
+  color: var(--accent);
+  font-weight: 700;
+  word-break: break-all;
+}
+
+/* Standing note on the results page — full width, sits above the Done button. */
+.notice-standing {
+  max-width: none;
+  margin-top: 4px;
+}
+
 /* Results screen */
 
 .results-screen {

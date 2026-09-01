@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NoMatchError, searchTrainings } from '../api/client';
 import Logo from '../components/Logo';
+import { SUPPORT_EMAIL, supportMailto } from '../support';
 
 export default function SearchScreen({ onResults }) {
   const [idNumber, setIdNumber] = useState('');
@@ -18,17 +19,17 @@ export default function SearchScreen({ onResults }) {
     try {
       const trainings = await searchTrainings(id, cert);
       if (trainings.length === 0) {
-        setError("We couldn't find any completed trainings for you yet. If that seems wrong, please contact Gravity.");
+        setError("We couldn't find any trainings for you yet.");
       } else {
         onResults(trainings);
       }
     } catch (e) {
-      // The API deliberately can't tell us which detail was wrong, so the message
-      // covers every case — including learners with no certificate on record.
+      // The API deliberately can't tell us which detail was wrong, so this covers
+      // every case — including learners with no certificate number on record.
       setError(
         e instanceof NoMatchError
-          ? "Those details don't match. Please check your ID number and certificate number — if you don't have a certificate number, contact Gravity for help."
-          : 'Something went wrong. Please try again — or contact Gravity for help.'
+          ? "Those details don't match. Please check your ID number and certificate number."
+          : 'Something went wrong. Please try again.'
       );
     } finally {
       setLoading(false);
@@ -84,7 +85,16 @@ export default function SearchScreen({ onResults }) {
         />
         <p className="field-hint">From any Gravity certificate you have received</p>
 
-        {error && <p className="error-text">{error}</p>}
+        {error && (
+          <div className="notice" role="alert">
+            <p className="error-text">{error}</p>
+            <p className="notice-help">
+              Still can't see your manuals? Email{' '}
+              <a href={supportMailto('Learner manuals — cannot access my manuals')}>{SUPPORT_EMAIL}</a>{' '}
+              and we'll help you.
+            </p>
+          </div>
+        )}
 
         {loading ? (
           <div className="spinner" aria-label="Searching" />

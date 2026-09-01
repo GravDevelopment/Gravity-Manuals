@@ -1,5 +1,6 @@
 import { manualUrl } from '../api/client';
 import Logo from '../components/Logo';
+import { SUPPORT_EMAIL, supportMailto } from '../support';
 
 function formatRange(training) {
   return `${training.startDate ?? '?'} — ${training.endDate ?? '?'}`;
@@ -60,6 +61,16 @@ export default function ResultsScreen({ trainings, onBack }) {
           );
         })}
       </ul>
+
+      {/* Always shown, not just when something is missing — a learner who can't
+          find what they came for shouldn't have to work out who to ask. */}
+      <div className="notice notice-standing" role="status">
+        <p className="notice-help">
+          Can't see a manual you're expecting? Email{' '}
+          <a href={supportMailto('Learner manuals — manual not available')}>{SUPPORT_EMAIL}</a>{' '}
+          with your ID number and the course name, and we'll send it to you.
+        </p>
+      </div>
 
       <button className="primary-button back-button" onClick={onBack}>
         Done — back to search
