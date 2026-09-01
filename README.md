@@ -74,8 +74,34 @@ npm start
   `REACT_APP_API_FUNCTION_KEY` set (see [.env](.env)), then host `build/`
   anywhere static (GitHub Pages, Azure Static Web Apps, …).
 
-## Adding a manual
+## Checking SharePoint for manual changes
 
-1. Drop the PDF into `api/manuals/`, named `lowercase-with-hyphens.pdf`.
-2. Add a line to `api/src/manuals.ts`:
-   `'Course Name As In Dataverse': 'file.pdf'`.
+The manuals are a snapshot, so nothing updates on its own. The
+[SharePoint `Manuals` folder](https://gravitygh.sharepoint.com/sites/GravityGH/Gravity%20GH/Forms/AllItems.aspx?id=%2Fsites%2FGravityGH%2FGravity%20GH%2FGravity%20Data%2FGravity%20Training%2FB%20Training%2FDesign%20and%20Development%2FManuals)
+is the single source of truth, and `api/manuals/BASELINE.json` records exactly
+what it held at the last import. To see what has moved since:
+
+```bash
+cd api
+node check-manuals.js --snippet     # prints a browser-console snippet
+node check-manuals.js listing.json  # diffs that listing against the baseline
+```
+
+It reports new, removed and revised files, and exits non-zero when anything has
+drifted, so it can be wired to a schedule later. The snippet route needs no
+special permission — it runs in a session that can already see the folder.
+
+Fully automatic checking (a nightly timer inside the Function App) needs a
+tenant admin to grant the app registration Microsoft Graph **`Sites.Selected`**
+on the GravityGH site. Until then the check is on demand.
+
+## Adding or updating a manual
+
+1. Put the PDF in the SharePoint `Manuals` folder — that stays the source.
+2. Copy it into `api/manuals/`, named `lowercase-with-hyphens.pdf`
+   (add a language suffix for translations, e.g. `bfa-fr.pdf`).
+3. Map it in `api/src/manuals.ts` — `MANUALS` for the file, `COURSE_MANUAL` for
+   the Dataverse course names that should get it.
+4. Update the table in `api/manuals/SOURCES.md` and refresh `BASELINE.json`.
+5. Deploy: `cd api && func azure functionapp publish gravity-manuals-api`
+   (no site rebuild — PDFs ship with the API).
