@@ -54,9 +54,13 @@ export default function SearchScreen({ onResults }) {
         <label className="field-label" htmlFor="idNumber">
           ID number
         </label>
-        {/* Not numeric-only: real learner IDs include passport-style values like
-            "T-1304-4144-994-1", "20010519-53220-00001-29" and "GHA7178513565",
-            so letters and hyphens must survive, and 20 chars is too short. */}
+        {/* Not numeric-only: learner IDs are not all South African 13-digit
+            numbers. Other formats in use carry letters and hyphens and run past
+            20 characters — roughly "A-1234-5678-901-2",
+            "19990101-12345-00001-11" and "ABC1234567890" in shape — so those
+            characters must survive and the limit has to be generous.
+            (Shapes only. Never put a real learner's identifier in this repo:
+            it is public.) */}
         <input
           id="idNumber"
           className="id-input"
@@ -72,18 +76,22 @@ export default function SearchScreen({ onResults }) {
         <label className="field-label" htmlFor="certificateNumber">
           Certificate number
         </label>
-        {/* Certificate numbers look like "287958/26" — keep the slash. */}
+        {/* Certificate numbers contain a slash, so keep it. No example value here:
+            this placeholder renders on a public page, and any realistic-looking
+            certificate number is likely to be a real learner's. */}
         <input
           id="certificateNumber"
           className="id-input cert-input"
           type="text"
           autoComplete="off"
           maxLength={24}
-          placeholder="e.g. 287958/26"
+          placeholder="Certificate number"
           value={certificateNumber}
           onChange={(e) => setCertificateNumber(e.target.value.replace(/[^A-Za-z0-9/-]/g, '').toUpperCase())}
         />
-        <p className="field-hint">From any Gravity certificate you have received</p>
+        <p className="field-hint">
+          Exactly as printed on any Gravity certificate you have received
+        </p>
 
         {error && (
           <div className="notice" role="alert">
