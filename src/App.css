@@ -145,12 +145,6 @@
   margin-bottom: 6px;
 }
 
-.id-input.cert-input {
-  font-size: 26px;
-  letter-spacing: 3px;
-  margin-bottom: 6px;
-}
-
 .field-hint {
   align-self: flex-start;
   color: var(--text-muted);

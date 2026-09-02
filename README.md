@@ -11,10 +11,10 @@ app, and reuses its Dataverse connection.
   red `#d32027` accent).
 - **API** ([api/](api/)): Azure Functions (Node/TypeScript), same pattern as the
   kiosk's API. Holds the Dataverse client-credentials secret.
-  - `GET /api/trainings?idNumber=…&cert=…` — the learner's enrolments whose booking
-    has already started, newest first, but **only if the certificate number matches
-    one recorded against them**. Each carries its `status` and, **only if that status
-    is Competent and a manual is mapped**, a `manualToken`.
+  - `GET /api/trainings?idNumber=…` — the learner's enrolments whose booking has
+    already started, newest first. Each carries its `status` and, **only if that
+    status is Competent and a manual is mapped**, a `manuals` array with one
+    signed token per available language.
   - `GET /api/manual?t=…` — streams the PDF the token grants.
 - **Manuals**: PDFs live in [api/manuals/](api/manuals/) and are mapped to course
   names in [api/src/manuals.ts](api/src/manuals.ts).
@@ -24,13 +24,12 @@ app, and reuses its Dataverse connection.
 The PDFs are deliberately **not** in the front-end's `public/` folder — anything
 there is fetchable by URL with no check. Instead:
 
-1. The caller proves identity with an **ID number plus a certificate number** that
-   Dataverse holds against one of their enrolments (any of theirs — it identifies
-   the person, it doesn't pick a course). Names can't do this job: 61% of
-   `grav_learnerfirstname` values hold more than one word and many learners come
-   from countries without surnames. Certificate numbers are on 98% of Competent
-   enrolments. Every failure returns the same 404 so the endpoint can't be used to
-   discover which ID numbers exist.
+1. **There is no identity check.** An ID number alone returns that learner's
+   record. A certificate-number second factor was built and then removed on
+   request, so anyone who knows or guesses an ID number can read someone's
+   training history and open their manuals. Restoring it means putting the check
+   back in `dataverse.ts` and the field back on the search screen — see the
+   commit that removed it.
 2. `/api/trainings` mints a manual token only for an enrollment Dataverse marks
    **Competent** (`tct_assessmentstatus` = 1). Ignore `tct_passfail`; it looks
    like the right column but is null on every row.
@@ -43,10 +42,13 @@ there is fetchable by URL with no check. Instead:
 
 `/api/trainings` is `authLevel: "anonymous"` on purpose: it is called from the
 browser, so any function key would be baked into the public JS bundle (GitHub's
-secret scanning rejects that, and DevTools would show it anyway). The ID +
-certificate pair is the access control. No secret of any kind ships to the
-browser — the Dataverse credential and the manual-signing key stay in the
-Function App's settings.
+secret scanning rejects that, and DevTools would show it anyway). CORS limits
+browser callers to the portal's origins but does not stop a direct request, so
+treat this endpoint as world-readable given an ID number. No secret of any kind
+ships to the browser — the Dataverse credential and the manual-signing key stay
+in the Function App's settings.
+
+The site is live at **https://gravitymanuals.co.za**.
 
 ## Run locally
 

@@ -128,25 +128,14 @@ async function fetchOne<T>(logicalName: string, id: string, select: string[]): P
 }
 
 /**
- * Does the presented certificate number match one recorded against this learner?
- * Whitespace and case are ignored; blank values never match, so a learner with no
- * certificate on record cannot be let in by sending an empty string.
+ * Returns the learner's trainings for an ID number, or [] if there are none.
+ *
+ * The ID number is the only thing asked for. A certificate-number check used to
+ * sit here as a second factor; it was removed on request, so anyone who knows or
+ * guesses an ID number can read that learner's record. Competency still gates
+ * the manuals themselves.
  */
-export function certificateMatches(presented: string, onRecord: unknown[]): boolean {
-  const normalise = (value: unknown) => String(value ?? "").replace(/\s+/g, "").toUpperCase();
-  const given = normalise(presented);
-  if (!given) return false;
-  return onRecord.map(normalise).filter((c) => c.length > 0).includes(given);
-}
-
-/**
- * Returns the learner's trainings, or null if the presented certificate number
- * doesn't match any of them (treat that as "no match", never as "wrong field").
- */
-export async function searchTrainingsByLearnerId(
-  idNumber: string,
-  certificateNumber: string
-): Promise<Training[] | null> {
+export async function searchTrainingsByLearnerId(idNumber: string): Promise<Training[]> {
   const filter = `grav_learnerid eq '${idNumber.replace(/'/g, "''")}'`;
   const response = await dataverseFetch(`tct_enrolls?$filter=${encodeURIComponent(filter)}`);
   if (!response.ok) {
@@ -155,17 +144,6 @@ export async function searchTrainingsByLearnerId(
   const body = await response.json();
   const rows: any[] = body.value ?? [];
 
-  // Identity check. The caller must present a certificate number Dataverse has
-  // recorded against one of this learner's enrolments; any of theirs will do,
-  // since it proves who they are rather than selecting a course.
-  //
-  // Names can't do this job: 61% of grav_learnerfirstname values hold more than
-  // one word, and many learners come from countries that don't use surnames.
-  // Certificate numbers are on 98% of Competent enrolments — precisely the ones
-  // that can yield a manual.
-  if (!certificateMatches(certificateNumber, rows.map((r) => r.grav_certificatenumber))) {
-    return null;
-  }
 
   // Dedupe fetches by (target-entity, id), so a learner with 3 enrollments in
   // the same course only fires one course fetch.

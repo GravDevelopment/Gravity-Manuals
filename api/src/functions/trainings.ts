@@ -5,19 +5,12 @@ import { mintManualToken } from "../token";
 
 export async function trainings(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
   const idNumber = request.query.get("idNumber")?.trim();
-  const certificateNumber = request.query.get("cert")?.trim();
-  if (!idNumber || !certificateNumber) {
-    return { status: 400, jsonBody: { error: "idNumber and cert are both required" } };
+  if (!idNumber) {
+    return { status: 400, jsonBody: { error: "idNumber is required" } };
   }
 
   try {
-    const found = await searchTrainingsByLearnerId(idNumber, certificateNumber);
-    if (found === null) {
-      // One response for every failure mode — unknown ID, wrong certificate, or
-      // no certificate on record. Distinguishing them would turn this endpoint
-      // into a way of confirming which ID numbers exist.
-      return { status: 404, jsonBody: { error: "No match for those details" } };
-    }
+    const found = await searchTrainingsByLearnerId(idNumber);
     // Only a Competent enrolment gets manual links, one per available language.
     // Filenames never leave the API — the browser only sees opaque signed tokens.
     const trainings = found.map((training) => ({
@@ -37,11 +30,11 @@ export async function trainings(request: HttpRequest, context: InvocationContext
   }
 }
 
-// Anonymous because there is nowhere safe to keep a key: this is called straight
-// from the browser, so any key would be baked into the public JS bundle (GitHub's
-// secret scanning rejects that, and DevTools would reveal it anyway). The real
-// access control is the ID + certificate pair checked above. CORS limits browser
-// callers to the portal's origin but does not stop a direct request.
+// Anonymous, and there is no second factor: an ID number alone returns the
+// learner's record. A function key can't help — this is called from the browser,
+// so any key ends up in the public JS bundle. CORS limits browser callers to the
+// portal's origins but does not stop a direct request, so treat this endpoint as
+// world-readable given an ID number.
 app.http("trainings", {
   methods: ["GET"],
   authLevel: "anonymous",
