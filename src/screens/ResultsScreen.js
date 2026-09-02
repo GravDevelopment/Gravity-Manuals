@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { manualUrl } from '../api/client';
 import Logo from '../components/Logo';
 import { SUPPORT_EMAIL, supportMailto } from '../support';
@@ -12,6 +13,48 @@ function manualNotice(training) {
   if (training.competent) return 'Manual not available yet';
   if (training.status === 'In Training') return 'Available once you are marked competent';
   return 'Not marked competent';
+}
+
+/**
+ * One button when there's a single manual; a language dropdown beside it when
+ * the course has translations. Each card keeps its own selection, so this has to
+ * be a component rather than inline markup.
+ */
+function ManualLinks({ manuals }) {
+  const [lang, setLang] = useState(manuals[0].lang);
+  const chosen = manuals.find((m) => m.lang === lang) ?? manuals[0];
+
+  const button = (
+    <a
+      className="manual-button"
+      href={manualUrl(chosen.token)}
+      target="_blank"
+      rel="noopener noreferrer"
+      lang={chosen.lang}
+    >
+      View manual
+    </a>
+  );
+
+  if (manuals.length === 1) return button;
+
+  return (
+    <span className="manual-links">
+      <select
+        className="lang-select"
+        value={lang}
+        onChange={(e) => setLang(e.target.value)}
+        aria-label="Manual language"
+      >
+        {manuals.map((m) => (
+          <option key={m.lang} value={m.lang}>
+            {m.label}
+          </option>
+        ))}
+      </select>
+      {button}
+    </span>
+  );
 }
 
 export default function ResultsScreen({ trainings, onBack }) {
@@ -44,24 +87,7 @@ export default function ResultsScreen({ trainings, onBack }) {
                     {training.status && ` · ${training.status}`}
                   </span>
                   {manuals.length > 0 ? (
-                    <span className="manual-links">
-                      {/* Every language listed and named, so nobody has to guess
-                          which button is which. */}
-                      <span className="manual-links-label">Manual:</span>
-                      {manuals.map((m) => (
-                        <a
-                          key={m.lang}
-                          className="manual-button"
-                          href={manualUrl(m.token)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          lang={m.lang}
-                          title={`Open the ${m.label} manual`}
-                        >
-                          {m.label}
-                        </a>
-                      ))}
-                    </span>
+                    <ManualLinks manuals={manuals} />
                   ) : (
                     <span className="manual-missing">{manualNotice(training)}</span>
                   )}
@@ -76,9 +102,9 @@ export default function ResultsScreen({ trainings, onBack }) {
           find what they came for shouldn't have to work out who to ask. */}
       <div className="notice notice-standing" role="status">
         <p className="notice-help">
-          Can't see a manual you're expecting, or need it in another language? Email{' '}
-          <a href={supportMailto('Learner manuals — manual not available')}>{SUPPORT_EMAIL}</a>{' '}
-          with your ID number and the course name, and we'll send it to you.
+          Having trouble seeing everything? Email{' '}
+          <a href={supportMailto('Learner manuals — having trouble')}>{SUPPORT_EMAIL}</a>{' '}
+          and we'll help you.
         </p>
       </div>
 

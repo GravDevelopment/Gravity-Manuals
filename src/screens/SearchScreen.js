@@ -66,8 +66,8 @@ export default function SearchScreen({ onResults }) {
           <div className="notice" role="alert">
             <p className="error-text">{error}</p>
             <p className="notice-help">
-              Still can't see your manuals? Email{' '}
-              <a href={supportMailto('Learner manuals — cannot access my manuals')}>{SUPPORT_EMAIL}</a>{' '}
+              Having trouble seeing everything? Email{' '}
+              <a href={supportMailto('Learner manuals — having trouble')}>{SUPPORT_EMAIL}</a>{' '}
               and we'll help you.
             </p>
           </div>
