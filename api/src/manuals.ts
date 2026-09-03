@@ -14,11 +14,10 @@
 // "Gravity Internal Training Course Material" library, which is the only place
 // they exist. api/manuals/SOURCES.md records every file's origin and revision.
 
+// Labels shown in the language dropdown.
 export const LANGUAGES: Record<string, string> = {
   en: "English",
-  fr: "Français",
-  pt: "Português",
-  ur: "اردو",
+  fr: "French",
 };
 
 type LangFiles = Record<string, string>;
@@ -30,8 +29,6 @@ const MANUALS: Record<string, LangFiles> = {
   fabr: {                                                    // GT9895_LM_Rev 6.1
     en: "fabr.pdf",
     fr: "fabr-fr.pdf",                                       // GLCFABRLM02_Rev 5.2
-    pt: "fabr-pt.pdf",                                       // GT9895PORLM02_Rev 3.3
-    ur: "fabr-ur.pdf",                                       // VERIFY: no Urdu text layer found
   },
   fplu: { en: "fplu.pdf" },                                  // GTFPULM02_Rev 1
   fpp: { en: "fpp.pdf" },                                    // GT94_LM_Rev_5

@@ -24,8 +24,6 @@ way to tell which revision a file really is, since filenames drift.
 | `bfa.pdf` | BFA & US 229998 Manual.pdf | GT98_LM_Rev 5.1 | English | 1119365 | a4a59350ed42f370 |
 | `ceim.pdf` | CEIM Manual.pdf | GLCCEIMLM_Rev 4 | English | 1196645 | eaa3f006e5bda7f1 |
 | `fabr-fr.pdf` | FABR & US 229998 & 229995 Manual (French).pdf | GLCFABRLM02_Rev 5.2 | Français | 6088329 | 4f90bbbf85a56b03 |
-| `fabr-pt.pdf` | FABR & US 229998 & 229995 Manual (Portuguese).pdf | GT9895PORLM02_Rev 3.3 | Português | 5360560 | 23eab6a85b0ffc94 |
-| `fabr-ur.pdf` | FABR & US 229998 & 229995 Manual (Urdu).pdf | GLCFABRLM_Rev1 2023 | اردو — VERIFY | 18409618 | 9fb4771286aad25a |
 | `fabr.pdf` | FABR & US 229998 & 229995 Manual.pdf | GT9895_LM_Rev 6.1 | English | 7842980 | d57f1c04ea406361 |
 | `fplu.pdf` | FPLU Manual.pdf | GTFPULM02_Rev 1 | English — unmapped | 2094570 | b9ac291a5fadbeca |
 | `fpp.pdf` | FPP & US 229994 Manual.pdf | GT94_LM_Rev_5 | English | 6567640 | 3b57aab9afc7933b |
@@ -62,17 +60,15 @@ then refresh `BASELINE.json` so the drift check stays clean.
   request. The "Tower Verticality Testing" course now shows no manual.
 - **`GTLOF Manual.pdf`** (Line of Fire) — withdrawn 2026-09-02 on request. No
   Dataverse course referenced it anyway.
-- **`GTRFA Manual (Portuguese).pdf`** and **`GTRFA Manual (Urdu).pdf`** —
-  withdrawn 2026-09-02 on request. Radio Frequency Awareness now offers English
-  and French only. (These two were uploaded to SharePoint by the import; delete
-  them there if they shouldn't be kept.)
+- **All Portuguese and Urdu manuals** — withdrawn 2026-09-02 on request:
+  `GTRFA Manual (Portuguese).pdf`, `GTRFA Manual (Urdu).pdf`,
+  `FABR & US 229998 & 229995 Manual (Portuguese).pdf` and
+  `... (Urdu).pdf`. **French is now the only translation offered.** All four were
+  uploaded to SharePoint by the import; delete them there if they shouldn't be
+  kept.
 
 ## Flagged for a human check
 
-- **`fabr-ur.pdf`** — filename says Urdu and the file is 17.6 MB for 71 pages,
-  but there is no Urdu text layer in the first 25 pages (only Latin characters),
-  so the Urdu is presumably page images. Nobody has confirmed the content is
-  actually Urdu.
 - **`gvs.pdf`** — the only file with no revision code and no course-overview
   page. Reads as a product specification ("Scope and intent", "Design",
   "Fall clearance") rather than a course manual. Mapped to the two GVS Installer
