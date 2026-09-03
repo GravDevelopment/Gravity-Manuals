@@ -7,8 +7,8 @@
 > `gravitygh.sharepoint.com/sites/GravityGH` → Gravity GH → Gravity Data →
 > Gravity Training → B Training → Design and Development → **Manuals**
 
-Imported 2026-09-01. Every file the portal serves is in that folder, and every
-file in that folder except one is served (see *Not served* below). The older
+Imported 2026-09-01. Every file the portal serves is in that folder, but not
+every file in the folder is served (see *Not served* below). The older
 `Gravity Internal Training Course Material` library is no longer used as a
 source — the translations that only existed there were copied across.
 
@@ -34,7 +34,6 @@ way to tell which revision a file really is, since filenames drift.
 | `gvs.pdf` | GVS Manual.pdf | (none printed) — VERIFY | English | 1470233 | ea1dfb5c48f10684 |
 | `ifpp-fr.pdf` | GLCIFPP Manual (French).pdf | GLCMLLM02_Rev 2 — code mismatch | Français | 3226384 | d26739d5046011f1 |
 | `ifpp.pdf` | GLCIFPP Manual.pdf | GLCIFPPLM_Rev 3 | English | 1161781 | 96a7bfb29eb559ce |
-| `line-of-fire.pdf` | GTLOF Manual.pdf | GTLOF_LM_Rev 1 | English — unmapped | 23293663 | 5078663d9205a85f |
 | `mechanical-lifting-fr.pdf` | ML MANUAL (French).pdf | GLCMLLM_Rev 2.1 | Français | 7064520 | c222570f4ba6ed5d |
 | `mechanical-lifting.pdf` | ML MANUAL.pdf | ML_M_Rev 2.1 | English | 4238150 | d7bdc243df79fb94 |
 | `plpc.pdf` | GLCPLPC MANUAL.pdf | GLCPLPC_Rev 4 | English | 2565910 | 40279085d135091b |
@@ -42,23 +41,31 @@ way to tell which revision a file really is, since filenames drift.
 | `ra-l1.pdf` | GLC98&00LM - Learner Manual_Rev 3.pdf | GLC98&00LM_Rev 3 | English | 6056066 | 8742e4f4f31936cf |
 | `ra-l2-l3.pdf` | GLC96,97&LM - Level 2 & 3 Manual_Rev 2.pdf | GLC96,97&LM_Rev 2 | English | 13201535 | 003f0760e46aedaa |
 | `rfa-fr.pdf` | GTRFA Manual (French).pdf | GLCRFALM02_Rev 1.4 (DRC) | Français | 2438978 | 142ce03201178843 |
-| `rfa-pt.pdf` | GTRFA Manual (Portuguese).pdf | GTPORRFALM02_Rev 1 | Português | 758162 | 89b82b4ed58a888f |
-| `rfa-ur.pdf` | GTRFA Manual (Urdu).pdf | GLCRFALM02_Rev2.0 | اردو | 1477003 | e655eabf733cb79f |
 | `rfa.pdf` | GTRFA_LM_Rev 4.pdf | GTRFA_LM_Rev 4 | English | 883353 | 4b2a97cd880964ea |
 | `rope-rigging-fr.pdf` | GLC06LM_RR MANUAL (French).pdf | GTRRLM02_Rev 3.2 | Français | 4787019 | 370ee77eea8c3de5 |
 | `rope-rigging.pdf` | GLC06LM_RR MANUAL_Rev3.3 .pdf | GLC06M_Rev 3.3 | English | 5163143 | 1339a2bbd034eb86 |
 | `telecommunication-abseiling.pdf` | GLCTALM01_Telecommmunication Abseiling Manual_Rev3.pdf | GLCTALM01_Rev 3 | English | 2159621 | 835a444a37bfbf13 |
 | `tower-erector-fr.pdf` | GLCTELM_TOWER ERECTOR MANUAL (French).pdf | GLCTELM_Rev 2.1 | Français | 8319157 | 90a2f69b2b6fb3b4 |
 | `tower-erector.pdf` | GLCTELM_TOWER ERECTOR MANUAL_Rev 3.pdf | GLCTELM_Rev 3 | English | 2264645 | 18af4b9e10d09c13 |
-| `tower-verticality.pdf` | GTTVT_LM_Rev 1.pdf | GTTVT_LM_Rev 1 | English | 703669 | 0c19933e677d59c4 |
 
 ## Not served
 
-- **`GTMML Manual.pdf`** (in the folder, deliberately not imported) — it is a
-  4-page assessor marking sheet (`GTMML_POE_Rev 1.1`, "Assessor to mark A for
-  achieved or NYA"), not a learner manual. Because of this the four
-  **Manual and Mechanical Lifting** courses (150kg/500kg, SA/Int) have no manual.
-  A real MML learner manual needs to be added to the folder.
+These remain in the SharePoint folder but are deliberately not in the portal.
+They were not deleted from SharePoint — if that is wanted, remove them there too,
+then refresh `BASELINE.json` so the drift check stays clean.
+
+- **`GTMML Manual.pdf`** — a 4-page assessor marking sheet (`GTMML_POE_Rev 1.1`,
+  "Assessor to mark A for achieved or NYA"), not a learner manual. Because of
+  this the four **Manual and Mechanical Lifting** courses (150kg/500kg, SA/Int)
+  have no manual. A real MML learner manual needs to be added to the folder.
+- **`GTTVT_LM_Rev 1.pdf`** (Tower Verticality Testing) — withdrawn 2026-09-02 on
+  request. The "Tower Verticality Testing" course now shows no manual.
+- **`GTLOF Manual.pdf`** (Line of Fire) — withdrawn 2026-09-02 on request. No
+  Dataverse course referenced it anyway.
+- **`GTRFA Manual (Portuguese).pdf`** and **`GTRFA Manual (Urdu).pdf`** —
+  withdrawn 2026-09-02 on request. Radio Frequency Awareness now offers English
+  and French only. (These two were uploaded to SharePoint by the import; delete
+  them there if they shouldn't be kept.)
 
 ## Flagged for a human check
 
@@ -87,14 +94,14 @@ way to tell which revision a file really is, since filenames drift.
 Basic Slinging · Commercial Banner Flighting · Confined Space Entry · Confined
 Space Rescue · First Aid Training · High Angle Level 1 · IRATA (all) · Legal
 Liability · Manual and Mechanical Lifting (all four) · Rooftop Worker ·
-Supervision Level 3 · Floorplan Inspection · Inspect Gear KITS
+Supervision Level 3 · Floorplan Inspection · Inspect Gear KITS ·
+Tower Verticality Testing
 
 Learners on these see "Manual not available yet" and are pointed at
 certification@gravitygh.co.za.
 
-`fplu.pdf` (Fallprotec Securail) and `line-of-fire.pdf` are in the folder and
-imported, but no Dataverse course name matches them yet, so nothing links to
-them.
+`fplu.pdf` (Fallprotec Securail) is imported but no Dataverse course name
+matches it yet, so nothing links to it.
 
 ## Refreshing a manual
 

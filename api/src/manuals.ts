@@ -38,7 +38,6 @@ const MANUALS: Record<string, LangFiles> = {
   gls: { en: "gls.pdf", fr: "gls-fr.pdf" },                  // GTGLS_LM_Rev 3 / GLCGLSLM02_Rev 2.2
   gvs: { en: "gvs.pdf" },                                    // VERIFY: product spec, no course-overview page
   ifpp: { en: "ifpp.pdf", fr: "ifpp-fr.pdf" },               // GLCIFPPLM_Rev 3
-  lineOfFire: { en: "line-of-fire.pdf" },                    // GTLOF_LM_Rev 1 — no course uses it yet
   mechanicalLifting: {                                       // ML_M_Rev 2.1
     en: "mechanical-lifting.pdf",
     fr: "mechanical-lifting-fr.pdf",                         // GLCMLLM_Rev 2.1
@@ -50,8 +49,6 @@ const MANUALS: Record<string, LangFiles> = {
   rfa: {                                                     // GTRFA_LM_Rev 4
     en: "rfa.pdf",
     fr: "rfa-fr.pdf",                                        // GLCRFALM02_Rev 1.4 (DRC)
-    pt: "rfa-pt.pdf",                                        // GTPORRFALM02_Rev 1
-    ur: "rfa-ur.pdf",                                        // GLCRFALM02_Rev2.0
   },
   ropeRigging: {                                             // GLC06M_Rev 3.3
     en: "rope-rigging.pdf",
@@ -62,7 +59,6 @@ const MANUALS: Record<string, LangFiles> = {
     en: "tower-erector.pdf",
     fr: "tower-erector-fr.pdf",                              // GLCTELM_Rev 2.1
   },
-  towerVerticality: { en: "tower-verticality.pdf" },         // GTTVT_LM_Rev 1
 };
 
 const COURSE_MANUAL: Record<string, keyof typeof MANUALS> = {
@@ -135,10 +131,9 @@ const COURSE_MANUAL: Record<string, keyof typeof MANUALS> = {
   "Telecommunication Abseiling": "telecomAbseiling",
   "Tower Erector": "towerErector",
   "Assistant Tower Erector": "towerErector",
-  "Tower Verticality Testing": "towerVerticality",
 
-  // No course currently maps to fplu (Fallprotec Securail) or lineOfFire —
-  // the PDFs are here ready for when those courses exist in Dataverse.
+  // No course maps to fplu (Fallprotec Securail); the PDF is here ready for
+  // when such a course exists in Dataverse.
   //
   // Deliberately unmapped: the four "Manual and Mechanical Lifting" courses.
   // The only MML file in SharePoint ("GTMML Manual.pdf") is a 4-page assessor
