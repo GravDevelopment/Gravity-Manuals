@@ -19,6 +19,20 @@ export async function manual(request: HttpRequest, context: InvocationContext): 
     return { status: 400, jsonBody: { error: "Bad manual reference" } };
   }
 
+  // Manuals are view-only: the portal draws them to a canvas so there is no
+  // Download or Print button. Handing the same URL to the address bar, an
+  // <iframe> or an <embed> would open the browser's own PDF viewer and undo
+  // that, so serve only same-page fetches. Sec-Fetch-Dest is set by the browser
+  // and cannot be forged from JavaScript; a client that sends none (curl) still
+  // needs a valid token, which is the check that actually protects the file.
+  const dest = request.headers.get("sec-fetch-dest");
+  if (dest && dest !== "empty") {
+    return {
+      status: 403,
+      jsonBody: { error: "Manuals can only be opened inside the portal." },
+    };
+  }
+
   try {
     const body = await readFile(path.join(MANUALS_DIR, file));
     return {
@@ -27,6 +41,7 @@ export async function manual(request: HttpRequest, context: InvocationContext): 
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="${file}"`,
         "Cache-Control": "private, no-store",
+        "X-Content-Type-Options": "nosniff",
       },
       body,
     };

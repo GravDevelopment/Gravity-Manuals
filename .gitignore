@@ -37,3 +37,5 @@ bld/
 *.suo
 *.vsidx
 .claude
+# Copied out of node_modules by npm run copy-pdf-worker
+/public/pdfjs/

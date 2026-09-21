@@ -7,13 +7,17 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
+    "pdfjs-dist": "^6.3.289",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "copy-pdf-worker": "node -e \"const f=require('fs'),r=s=>require.resolve('pdfjs-dist/legacy/build/'+s);f.mkdirSync('public/pdfjs',{recursive:true});f.copyFileSync(r('pdf.min.mjs'),'public/pdfjs/pdf.min.js');f.copyFileSync(r('pdf.worker.min.mjs'),'public/pdfjs/pdf.worker.min.js')\"",
+    "prestart": "npm run copy-pdf-worker",
     "start": "react-scripts start",
+    "prebuild": "npm run copy-pdf-worker",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

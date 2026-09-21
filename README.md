@@ -7,8 +7,8 @@ app, and reuses its Dataverse connection.
 ## How it works
 
 - **Front-end** (this folder): Create React App. Search screen → course cards →
-  "View manual". Styling mirrors `learner-signin-kiosk/app` (white background,
-  red `#d32027` accent).
+  "View manual", which opens the PDF in the portal's own viewer. Styling mirrors
+  `learner-signin-kiosk/app` (white background, red `#d32027` accent).
 - **API** ([api/](api/)): Azure Functions (Node/TypeScript), same pattern as the
   kiosk's API. Holds the Dataverse client-credentials secret.
   - `GET /api/trainings?idNumber=…` — the learner's enrolments whose booking has
@@ -39,6 +39,31 @@ there is fetchable by URL with no check. Instead:
 4. `/api/manual` serves a PDF only against a valid, unexpired token. Forged,
    tampered and expired tokens all get a 403 — see
    [api/src/token.check.ts](api/src/token.check.ts) (`cd api && npm run check`).
+
+### Manuals are view-only
+
+Learners should be able to read a manual but not keep a copy, so the browser's
+own PDF viewer — with its Download and Print buttons — never opens:
+
+- [src/components/PdfViewer.js](src/components/PdfViewer.js) fetches the PDF and
+  draws it to a `<canvas>` with pdf.js, a page at a time. There is no toolbar,
+  no text layer to select or copy, and the right-click menu is suppressed.
+- `/api/manual` rejects any request whose `Sec-Fetch-Dest` is not `empty`, so
+  pasting a manual URL into the address bar, an `<iframe>` or an `<embed>` gets
+  a 403 instead of the browser's viewer. The header is set by the browser and
+  can't be forged from page script.
+- A print stylesheet in [src/App.css](src/App.css) blanks the page, so Ctrl+P
+  (and "save as PDF" through the print dialog) yields only a short notice.
+
+**This is a deterrent, not DRM.** The bytes have to reach the browser to be
+drawn, so anyone willing to open DevTools and save the network response still
+gets the file. Stopping that needs a rights-managed viewer service, not a
+change in this repo. What's here removes every one-click route.
+
+pdf.js is ESM-only and CRA's webpack can't minify it, so `npm run
+copy-pdf-worker` (wired into `prestart`/`prebuild`) copies it out of
+`node_modules` into the gitignored `public/pdfjs/`, and it is loaded from our
+own origin at runtime rather than bundled.
 
 `/api/trainings` is `authLevel: "anonymous"` on purpose: it is called from the
 browser, so any function key would be baked into the public JS bundle (GitHub's

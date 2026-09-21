@@ -283,8 +283,10 @@
   font-size: 15px;
   font-weight: 700;
   text-decoration: none;
+  border: none;
   border-radius: 8px;
   padding: 10px 20px;
+  cursor: pointer;
 }
 
 .manual-button:hover {
@@ -333,4 +335,112 @@
   letter-spacing: normal;
   padding: 18px;
   margin-top: 14px;
+}
+
+/* Manual viewer ---------------------------------------------------------- */
+
+.pdf-viewer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--surface);
+  /* Nothing here is text, but stop the drag-to-save gesture on the canvas. */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.pdf-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: var(--background);
+  border-bottom: 1.5px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.pdf-close {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+
+.pdf-title {
+  flex: 1;
+  /* Without this a flex child refuses to shrink below its text, so a long
+     course name would push the page count off a phone screen. */
+  min-width: 0;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pdf-count {
+  color: var(--text-muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.pdf-stage {
+  flex: 1;
+  padding: 16px;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.pdf-page {
+  display: block;
+  width: 100%;
+  height: auto;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.pdf-error {
+  color: var(--danger);
+  font-weight: 600;
+  text-align: center;
+  padding: 40px 16px;
+}
+
+.pdf-nav {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 12px 16px 24px;
+}
+
+.pdf-nav .primary-button {
+  min-width: 130px;
+}
+
+.pdf-nav .primary-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Manuals are view-only. Printing the page (or "save as PDF" through the print
+   dialog) would be a way around that, so print nothing but a note. */
+@media print {
+  body * {
+    display: none !important;
+  }
+
+  body::after {
+    content: 'Gravity training manuals are view-only and cannot be printed.';
+    display: block !important;
+    font-family: inherit;
+    font-size: 14pt;
+    padding: 40pt;
+  }
 }

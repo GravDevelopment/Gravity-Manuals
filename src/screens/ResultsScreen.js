@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { manualUrl } from '../api/client';
 import Logo from '../components/Logo';
+import PdfViewer from '../components/PdfViewer';
 import { SUPPORT_EMAIL, supportMailto } from '../support';
 
 function formatRange(training) {
@@ -20,20 +21,21 @@ function manualNotice(training) {
  * the course has translations. Each card keeps its own selection, so this has to
  * be a component rather than inline markup.
  */
-function ManualLinks({ manuals }) {
+function ManualLinks({ manuals, courseName, onOpen }) {
   const [lang, setLang] = useState(manuals[0].lang);
   const chosen = manuals.find((m) => m.lang === lang) ?? manuals[0];
 
+  // A button, not a link: the manual opens in our own canvas viewer rather than
+  // the browser's PDF viewer, which would hand the learner Download and Print.
   const button = (
-    <a
+    <button
+      type="button"
       className="manual-button"
-      href={manualUrl(chosen.token)}
-      target="_blank"
-      rel="noopener noreferrer"
       lang={chosen.lang}
+      onClick={() => onOpen({ url: manualUrl(chosen.token), title: courseName })}
     >
       View manual
-    </a>
+    </button>
   );
 
   if (manuals.length === 1) return button;
@@ -59,6 +61,11 @@ function ManualLinks({ manuals }) {
 
 export default function ResultsScreen({ trainings, onBack }) {
   const firstName = trainings[0]?.firstName || 'there';
+  const [viewing, setViewing] = useState(null);
+
+  if (viewing) {
+    return <PdfViewer url={viewing.url} title={viewing.title} onClose={() => setViewing(null)} />;
+  }
 
   return (
     <div className="results-screen">
@@ -87,7 +94,11 @@ export default function ResultsScreen({ trainings, onBack }) {
                     {training.status && ` · ${training.status}`}
                   </span>
                   {manuals.length > 0 ? (
-                    <ManualLinks manuals={manuals} />
+                    <ManualLinks
+                      manuals={manuals}
+                      courseName={training.courseName ?? 'Manual'}
+                      onOpen={setViewing}
+                    />
                   ) : (
                     <span className="manual-missing">{manualNotice(training)}</span>
                   )}
