@@ -8,9 +8,14 @@ let pdfjsPromise = null;
 
 function loadPdfjs() {
   if (!pdfjsPromise) {
-    const base = `${process.env.PUBLIC_URL}/pdfjs`;
-    pdfjsPromise = import(/* webpackIgnore: true */ `${base}/pdf.min.js`).then((lib) => {
-      lib.GlobalWorkerOptions.workerSrc = `${base}/pdf.worker.min.js`;
+    // Resolve against the page, not the bundle. `homepage: "."` bakes
+    // PUBLIC_URL as ".", and a native import() resolves a relative specifier
+    // against the importing module's URL — so a bare "./pdfjs/…" would be
+    // fetched from /static/js/pdfjs/… and 404. new URL() pins it to the page
+    // for both the "." production value and the "" development one.
+    const base = new URL(`${process.env.PUBLIC_URL || ''}/pdfjs/`, document.baseURI).href;
+    pdfjsPromise = import(/* webpackIgnore: true */ `${base}pdf.min.js`).then((lib) => {
+      lib.GlobalWorkerOptions.workerSrc = `${base}pdf.worker.min.js`;
       return lib;
     });
   }
@@ -54,10 +59,16 @@ export default function PdfViewer({ url, title, onClose }) {
         setPageCount(doc.numPages);
         setPage(1);
       })
-      .catch(() => {
-        if (!cancelled) {
-          setError('This manual link has expired. Go back and search again for a fresh one.');
-        }
+      .catch((err) => {
+        if (cancelled) return;
+        // Don't claim expiry for what might be a network or script failure —
+        // say what's known, and leave the real cause in the console.
+        console.error('Manual failed to open', err);
+        setError(
+          err?.status === 403
+            ? 'This manual link has expired. Go back and search again for a fresh one.'
+            : "Sorry — this manual couldn't be opened. Go back and try again."
+        );
       });
 
     return () => {
