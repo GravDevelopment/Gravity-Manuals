@@ -22,8 +22,72 @@ function loadPdfjs() {
   return pdfjsPromise;
 }
 
+// Bitmap width of a rail thumbnail. Roughly the CSS width times a 2x screen.
+const THUMB_WIDTH = 208;
+
 /**
- * Draws the manual to a canvas, one page at a time.
+ * One page in the rail. Renders itself only once it scrolls into view, so
+ * opening a long manual doesn't queue a hundred renders up front.
+ */
+function Thumbnail({ doc, pageNumber, active, onSelect }) {
+  const canvasRef = useRef(null);
+  const buttonRef = useRef(null);
+  const [drawn, setDrawn] = useState(false);
+
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (!doc || !button || drawn) return undefined;
+
+    let cancelled = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        doc.getPage(pageNumber).then((pdfPage) => {
+          const canvas = canvasRef.current;
+          if (cancelled || !canvas) return;
+          const unscaled = pdfPage.getViewport({ scale: 1 });
+          const viewport = pdfPage.getViewport({ scale: THUMB_WIDTH / unscaled.width });
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          pdfPage
+            .render({ canvasContext: canvas.getContext('2d'), viewport })
+            .promise.then(() => !cancelled && setDrawn(true))
+            .catch(() => {});
+        });
+      },
+      { root: button.closest('.pdf-rail'), rootMargin: '200px' }
+    );
+    observer.observe(button);
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
+  }, [doc, pageNumber, drawn]);
+
+  // Keep the current page visible when it changes by keyboard or Next/Previous.
+  useEffect(() => {
+    if (active) buttonRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }, [active]);
+
+  return (
+    <button
+      ref={buttonRef}
+      type="button"
+      className={`pdf-thumb${active ? ' is-active' : ''}`}
+      aria-label={`Page ${pageNumber}`}
+      aria-current={active ? 'true' : undefined}
+      onClick={() => onSelect(pageNumber)}
+    >
+      <canvas ref={canvasRef} className="pdf-thumb-canvas" />
+      <span className="pdf-thumb-number">{pageNumber}</span>
+    </button>
+  );
+}
+
+/**
+ * Draws the manual to a canvas, one page at a time, with a rail of page
+ * thumbnails to jump around by.
  *
  * The point is that the browser's own PDF viewer never opens: no Download, no
  * Print, no Save as, and no text layer to select and copy. A canvas also keeps
@@ -33,6 +97,7 @@ export default function PdfViewer({ url, title, onClose }) {
   const canvasRef = useRef(null);
   const stageRef = useRef(null);
   const docRef = useRef(null);
+  const [doc, setDoc] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [page, setPage] = useState(1);
   const [stageWidth, setStageWidth] = useState(0);
@@ -56,6 +121,7 @@ export default function PdfViewer({ url, title, onClose }) {
           return;
         }
         docRef.current = doc;
+        setDoc(doc);
         setPageCount(doc.numPages);
         setPage(1);
       })
@@ -74,18 +140,24 @@ export default function PdfViewer({ url, title, onClose }) {
     return () => {
       cancelled = true;
       docRef.current = null;
+      setDoc(null);
       task?.destroy();
     };
   }, [url]);
 
-  // Re-render on rotation or a window resize, so the page stays sharp instead
-  // of being an upscaled bitmap from whatever width it first opened at.
+  // Measure the canvas's own CSS width — it honours the stage's padding and the
+  // 900px max-width, which is exactly the box the page has to fill. Measured
+  // once up front rather than waiting on the observer, which doesn't fire until
+  // the document renders, then again on rotation or resize so it stays sharp.
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return undefined;
-    const observer = new ResizeObserver(([entry]) =>
-      setStageWidth(Math.round(entry.contentRect.width))
-    );
+    const measure = () => {
+      const canvas = canvasRef.current;
+      if (canvas) setStageWidth(Math.round(canvas.getBoundingClientRect().width));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
     observer.observe(stage);
     return () => observer.disconnect();
   }, [error]);
@@ -146,8 +218,23 @@ export default function PdfViewer({ url, title, onClose }) {
       {error ? (
         <p className="pdf-error">{error}</p>
       ) : (
-        <div className="pdf-stage" ref={stageRef}>
-          <canvas ref={canvasRef} className="pdf-page" />
+        <div className="pdf-body">
+          {pageCount > 1 && (
+            <nav className="pdf-rail" aria-label="Pages">
+              {Array.from({ length: pageCount }, (_, i) => (
+                <Thumbnail
+                  key={i + 1}
+                  doc={doc}
+                  pageNumber={i + 1}
+                  active={i + 1 === page}
+                  onSelect={setPage}
+                />
+              ))}
+            </nav>
+          )}
+          <div className="pdf-stage" ref={stageRef}>
+            <canvas ref={canvasRef} className="pdf-page" />
+          </div>
         </div>
       )}
 
