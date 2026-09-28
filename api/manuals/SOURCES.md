@@ -88,10 +88,15 @@ then refresh `BASELINE.json` so the drift check stays clean.
 ## Courses with no manual
 
 Basic Slinging · Commercial Banner Flighting · Confined Space Entry · Confined
-Space Rescue · First Aid Training · High Angle Level 1 · IRATA (all) · Legal
+Space Rescue · First Aid Training · High Angle Level 1 · Legal
 Liability · Manual and Mechanical Lifting (all four) · Rooftop Worker ·
 Supervision Level 3 · Floorplan Inspection · Inspect Gear KITS ·
 Tower Verticality Testing
+
+No IRATA manual exists either, but the levelled IRATA courses now borrow the
+Gravity rope access manuals — requested so a learner on an IRATA course can
+still open the Gravity manual. See the IRATA block in `api/src/manuals.ts` for
+which courses, and which are deliberately left out.
 
 Learners on these see "Manual not available yet" and are pointed at
 certification@gravitygh.co.za.
