@@ -115,22 +115,18 @@ const COURSE_MANUAL: Record<string, keyof typeof MANUALS> = {
   "Rope Access Level 3 Test": "raL2L3",
   "Rope Access L3 - Recap/Assessment only": "raL2L3",
 
-  // IRATA. There is no IRATA manual anywhere — SOURCES.md lists "IRATA (all)"
-  // under "Courses with no manual" — so these share the Gravity rope access
-  // manuals, which is what was asked for.
-  //
-  // Spelled exactly as Dataverse holds them, which is not how you'd guess:
-  // there is no "IRATA Rope Access Level 2", Level 2 is a differently-worded
-  // course with capitalised LEVEL and spaces inside its brackets.
+  // IRATA. There is no IRATA manual anywhere — SOURCES.md lists IRATA under
+  // "Courses with no manual" — so these share the Gravity rope access manuals,
+  // which is what was asked for.
   "IRATA Rope Access Level 1": "raL1",
-  "IRATA LEVEL 2 ( Practical )": "raL2L3",
+  "IRATA Rope Access Level 2": "raL2L3",
   "IRATA Rope Access Level 3": "raL2L3",
   //
   // Left unmapped, because their names don't say which level they are and the
-  // L1 and L2/L3 manuals are different books: "IRATA", "IRATA Rope Access
-  // Theory", "IRATA Rope Access TEST". Between them they have 6 competent
-  // learners. "IRATA Assessor Workshop Training" has none, and is assessor
-  // training rather than a learner course.
+  // L1 and L2/L3 manuals are different books: "IRATA Rope Access Theory" and
+  // "IRATA Rope Access TEST", one competent learner each. "IRATA Assessor
+  // Workshop Training" has none, and is assessor training rather than a
+  // learner course.
 
   "Radio Frequency Awareness": "rfa",
   "E-Learning Radio Frequency Awareness": "rfa",
